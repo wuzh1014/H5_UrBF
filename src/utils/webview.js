@@ -6,8 +6,8 @@ export function openWebview(config, style = {}, extras = {}) {
     config.url,
     config.id,
     {
-      top: 0, // 新页面顶部位置
-      bottom: 0, // 新页面底部位置
+      top: 80, // 新页面顶部位置
+      bottom: 50, // 新页面底部位置
       render: "always",
       popGesture: "hide",
       bounce: "vertical",
@@ -18,7 +18,7 @@ export function openWebview(config, style = {}, extras = {}) {
         titleText: config.title, // 导航栏标题
         titleColor: "#000000", // 文字颜色
         type: "transparent", // 透明渐变样式
-        autoBackButton: true, // 自动绘制返回箭头
+        autoBackButton: false, // 自动绘制返回箭头
         splitLine: {
           // 底部分割线
           color: "#cccccc"
@@ -33,7 +33,8 @@ export function openWebview(config, style = {}, extras = {}) {
   wv.addEventListener(
     "loaded",
     function () {
-      wv.show("slide-in-right"); // 显示窗口
+      wv.show(); // 显示窗口
+      // wv.show("slide-in-right"); // 显示窗口
       w.close();
       w = null;
     },
@@ -53,7 +54,7 @@ export function openWebviewFast(url, id, title) {
         titleText: title, // 导航栏标题
         titleColor: "#666", // 文字颜色
         // type: "transparent", // 透明渐变样式
-        autoBackButton: true, // 自动绘制返回箭头
+        autoBackButton: false, // 自动绘制返回箭头
         splitLine: {
           // 底部分割线
           color: "#cccccc"
@@ -67,6 +68,7 @@ export function openWebviewFast(url, id, title) {
     }
   );
 }
+
 // 预加载页面 速度很快,但是不要加载超过10个
 export function preLoad(webviews = []) {
   webviews.map(webview => {
@@ -78,19 +80,19 @@ export function preLoad(webviews = []) {
       webview.url,
       webview.id,
       {
-        top: 0, // 新页面顶部位置
-        bottom: 0, // 新页面底部位置
+        top: 70, // 新页面顶部位置
+        bottom: 80, // 新页面底部位置
         render: "always",
         popGesture: "hide",
         bounce: "vertical",
-        bounceBackground: "#efeff4",
+        bounceBackground: "#8c9a3d",
         titleNView: {
           // 详情页原生导航配置
-          backgroundColor: "#f7f7f7", // 导航栏背景色
+          backgroundColor: "#4744bb", // 导航栏背景色
           titleText: webview.title, // 导航栏标题
           titleColor: "#000000", // 文字颜色
           type: "transparent", // 透明渐变样式
-          autoBackButton: true, // 自动绘制返回箭头
+          autoBackButton: false, // 自动绘制返回箭头
           splitLine: {
             // 底部分割线
             color: "#cccccc"
@@ -102,7 +104,8 @@ export function preLoad(webviews = []) {
     );
   });
 }
-
+// bounceBackground: "#efeff4",  f7f7f7
 export function showWebviewById(id) {
-  plus.webview.show(id, "slide-in-right", 200);
+  plus.webview.show(id, "", 200);
+  // plus.webview.show(id, "slide-in-right", 200);
 }
