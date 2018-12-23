@@ -14,7 +14,7 @@ export function openWebview(config, style = {}, extras = {}) {
       bounceBackground: "#efeff4",
       titleNView: {
         // 详情页原生导航配置
-        backgroundColor: "#f7f7f7", // 导航栏背景色
+        backgroundColor: "#ffcdd2", // 导航栏背景色
         titleText: config.title, // 导航栏标题
         titleColor: "#000000", // 文字颜色
         type: "transparent", // 透明渐变样式
@@ -85,10 +85,10 @@ export function preLoad(webviews = []) {
         render: "always",
         popGesture: "hide",
         bounce: "vertical",
-        bounceBackground: "#8c9a3d",
+        bounceBackground: "#ffcdd2",
         titleNView: {
           // 详情页原生导航配置
-          backgroundColor: "#4744bb", // 导航栏背景色
+          backgroundColor: "#ffcdd2", // 导航栏背景色
           titleText: webview.title, // 导航栏标题
           titleColor: "#000000", // 文字颜色
           type: "transparent", // 透明渐变样式

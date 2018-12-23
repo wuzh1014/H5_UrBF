@@ -14,6 +14,9 @@
         </mu-flex>
       </mu-flex>
     </mu-flex>
+    <mu-icon style="position:absolute" :color='item.color' v-for="(item, index) in snow_list" :key="index"
+             :style='{left:item.left,top:item.top}'
+             class='love_img' :value="item.icon"></mu-icon>
     <mu-icon style="position:absolute" :color='item.color' v-for="(item, index) in love_list" :key="index"
              :style='{left:item.left,top:item.top}'
              class='love_img' :value="item.icon"></mu-icon>
@@ -41,6 +44,7 @@
   export default {
     data() {
       return {
+        snow_list: [],
         love_list: [],
         notice_list: [{
           img: require("@/assets/image/bor.jpg"),
@@ -86,8 +90,10 @@
       }
 
     },
-    onLoad() {
-      this.refresh_sample()
+    created() {
+      this.snow_flow();
+      this.refresh_sample();
+      console.log(this.snow_list)
     },
     methods: {
       switch_type(color, icon_color, icon, type) {
@@ -130,7 +136,39 @@
         setTimeout(function () {
           that.love_list.splice(0, 3)
         }, 2500)
-
+      },
+      snow_flow() {
+        let left = window.innerWidth;
+        let top = window.innerHeight;
+        for (let i = 0; i < 30; i++) {
+          let rleft = Math.round(Math.random() * (left));
+          let rtop = Math.round(Math.random() * (top) * 0.9);
+          this.snow_list.push({
+            left: rleft + 'px',
+            top: rtop + 'px',
+            color: 'red100',
+            icon: 'ac_unit',
+          });
+        }
+        let that = this;
+        setInterval(function () {
+          for (let i = 0; i < 30; i++) {
+            let rleft = 1;
+            let rtop = 1;
+            let mx = parseInt(that.snow_list[i].left) - rleft;
+            let my = parseInt(that.snow_list[i].top) + rtop;
+            if (mx < 0) {
+              mx = window.innerWidth;
+              my = Math.round(Math.random() * (top) * 0.9);
+            }
+            if (my > window.innerHeight) {
+              mx = Math.round(Math.random() * (left));
+              my = 0;
+            }
+            that.snow_list[i].left = mx + 'px';
+            that.snow_list[i].top = my + 'px';
+          }
+        }, 1000 / 24)
       },
       send_notice(msg, type) {
         let data = {

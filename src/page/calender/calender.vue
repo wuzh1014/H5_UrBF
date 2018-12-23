@@ -2,7 +2,7 @@
   <mu-container>
     <mu-flex justify-content="center" align-items="center" wrap="wrap">
       <mu-paper :z-depth="1" class="demo-date-picker">
-        <mu-date-picker @change='change_date' :date.sync="date"></mu-date-picker>
+        <mu-date-picker @change='change_date' :date.sync="date" :color="red500" :display-color="red200"></mu-date-picker>
       </mu-paper>
     </mu-flex>
 
