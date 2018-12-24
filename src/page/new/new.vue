@@ -136,6 +136,7 @@
       this.snow_flow();
       this.refresh_sample();
       console.log(this.snow_list);
+      plus.nativeUI.alert('')
       plus.push.createMessage('hi');
     },
     methods: {
