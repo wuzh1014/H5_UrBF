@@ -14,16 +14,57 @@
         </mu-flex>
       </mu-flex>
     </mu-flex>
-    <mu-icon style="position:absolute" :color='item.color' v-for="(item, index) in snow_list" :key="index"
-             :style='{left:item.left,top:item.top}'
-             class='love_img' :value="item.icon"></mu-icon>
+
+    <transition enter-active-class="bouncein">
+      <mu-icon style="position:absolute" :color='item.color' v-for="(item, index) in snow_list" :key="index"
+               :style='{left:item.left,top:item.top}'
+               class='love_img' :value="item.icon"></mu-icon>
+    </transition>
+
     <mu-icon style="position:absolute" :color='item.color' v-for="(item, index) in love_list" :key="index"
              :style='{left:item.left,top:item.top}'
              class='love_img' :value="item.icon"></mu-icon>
   </mu-container>
 </template>
+<!--https://www.dcloud.io/docs/api/zh_cn/webview.html-->
+<!--http://www.html5plus.org/doc/zh_cn/push.html#plus.push.createMessage-->
+<style lang="scss">
+  @mixin ballb($yaxis: 0) {
+    transform: translate3d(0, $yaxis, 0);
+  }
 
-<style>
+  @keyframes bouncein {
+    1% {
+      @include ballb(-400px);
+    }
+    20%, 40%, 60%, 80%, 95%, 99%, 100% {
+      @include ballb()
+    }
+    30% {
+      @include ballb(-80px);
+    }
+    50% {
+      @include ballb(-40px);
+    }
+    70% {
+      @include ballb(-30px);
+    }
+    90% {
+      @include ballb(-15px);
+    }
+    97% {
+      @include ballb(-10px);
+    }
+  }
+
+  .bouncein {
+    animation: bouncein 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  }
+
+  .ballmove-enter {
+    @include ballb(-400px);
+  }
+
   .love_img {
     position: absolute;
     width: 20px;
@@ -93,7 +134,8 @@
     created() {
       this.snow_flow();
       this.refresh_sample();
-      console.log(this.snow_list)
+      console.log(this.snow_list);
+      plus.push.createMessage('hi');
     },
     methods: {
       switch_type(color, icon_color, icon, type) {
