@@ -14,12 +14,14 @@
         </mu-flex>
       </mu-flex>
     </mu-flex>
-
-    <transition enter-active-class="bouncein">
+    <mu-flex class='notice-list' justify-content="center" direction='column' align-items="center">
+      <label style="color: #ff92c4">我的次数：{{my_count}}</label><label style="color: #33e2ff">TA的次数：{{him_count}}</label>
+    </mu-flex>
+    <!--<transition enter-active-class="bouncein">-->
       <mu-icon style="position:absolute" :color='item.color' v-for="(item, index) in snow_list" :key="index"
                :style='{left:item.left,top:item.top}'
                class='love_img' :value="item.icon"></mu-icon>
-    </transition>
+    <!--</transition>-->
 
     <mu-icon style="position:absolute" :color='item.color' v-for="(item, index) in love_list" :key="index"
              :style='{left:item.left,top:item.top}'
@@ -85,7 +87,14 @@
 <script>
   export default {
     data() {
+      let sown = '1';
+      let shim = '0';
       return {
+        own: sown,
+        him: shim,
+        my_count: 0,
+        plus: '',
+        him_count: 0,
         snow_list: [],
         love_list: [],
         notice_list: [{
@@ -133,11 +142,18 @@
 
     },
     created() {
+      // function plusReady() {
+      //   let ws = plus.webview.currentWebview();
+      // }
+      //
+      // if (window.plus) {
+      //   plusReady();
+      // } else {
+      //   document.addEventListener("plusready", plusReady, false);
+      // }
       this.snow_flow();
       this.refresh_sample();
-      console.log(this.snow_list);
-      plus.nativeUI.alert('')
-      plus.push.createMessage('hi');
+      this.load_notice();
     },
     methods: {
       switch_type(color, icon_color, icon, type) {
@@ -184,7 +200,7 @@
       snow_flow() {
         let left = window.innerWidth;
         let top = window.innerHeight;
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < 20; i++) {
           let rleft = Math.round(Math.random() * (left));
           let rtop = Math.round(Math.random() * (top) * 0.9);
           this.snow_list.push({
@@ -196,9 +212,9 @@
         }
         let that = this;
         setInterval(function () {
-          for (let i = 0; i < 30; i++) {
+          for (let i = 0; i < 20; i++) {
             let rleft = 1;
-            let rtop = 1;
+            let rtop = 5;
             let mx = parseInt(that.snow_list[i].left) - rleft;
             let my = parseInt(that.snow_list[i].top) + rtop;
             if (mx < 0) {
@@ -212,7 +228,7 @@
             that.snow_list[i].left = mx + 'px';
             that.snow_list[i].top = my + 'px';
           }
-        }, 1000 / 24)
+        }, 1000 / 5)
       },
       send_notice(msg, type) {
         let data = {
@@ -221,28 +237,63 @@
           date: new Date(),
           from: 0
         };
-
-        this.$axios.get(this.$serverUrl + '/lpush/bf_notice/' + JSON.stringify(data), {}
+        let that = this;
+        this.$axios.get(this.$serverUrl + '/lpush/bf_notice_' + this.own + '/' + JSON.stringify(data), {}
         ).then(function (response) {
-          console.log("data", response);
+          that.clean_notice()
         }).catch(function (error) {
           console.log(error);
         });
-
       },
       refresh_sample() {
+        let that = this;
         for (let i = 0; i < 4; i++) {
           let type = i;
           this.$axios.get(this.$serverUrl + '/lrange/bf_sample_' + type + '/0/-1', {}
           ).then(function (response) {
             if (response && response.data && response.data.lrange) {
-              this.msg_list[type] = this.msg_list[type].concat(response.data.lrange);
-              console.info(this.msg_list[type])
+              that.msg_list[type] = that.msg_list[type].concat(response.data.lrange);
             }
           }).catch(function (error) {
             console.log(error);
           });
         }
+      },
+      plus_notice() {
+        plus.push.createMessage('你的女朋友提醒你了');
+      },
+      load_notice() {
+        let that = this;
+        setInterval(function () {
+          that.$axios.get(that.$serverUrl + '/llen/bf_notice_' + that.him, {}
+          ).then(function (response) {
+            if (response && response.data) {
+              that.him_count = response.data.llen;
+              if (that.own === '1' && that.him_count > 0) {
+                that.plus_notice()
+              }
+            }
+          }).catch(function (error) {
+            console.log(error);
+          });
+          that.$axios.get(that.$serverUrl + '/llen/bf_notice_' + that.own, {}
+          ).then(function (response) {
+            if (response && response.data) {
+              that.my_count = response.data.llen;
+            }
+          }).catch(function (error) {
+            console.log(error);
+          });
+        }, 3000)
+      },
+      clean_notice() {
+        let that = this;
+        that.$axios.get(that.$serverUrl + '/ltrim/bf_notice_' + that.him + '/10000/-1', {}
+        ).then(function (response) {
+          console.log(response);
+        }).catch(function (error) {
+          console.log(error);
+        });
       },
     }
   }

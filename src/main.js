@@ -5,8 +5,6 @@ import Vue from "vue";
 import "./utils/common";
 import App from "./App";
 
-const appId = "com.femirror.mogoh5";
-
 
 import MuseUI from 'muse-ui';
 import Toast from 'muse-ui-toast';
